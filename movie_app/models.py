@@ -7,20 +7,37 @@ class Director(models.Model):
 
     def __str__(self):
         return self.name
+    def movie_count(self):
+        return len(self.movies.all())
+
 
 class Movie(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     duration = models.IntegerField()
-    director = models.ForeignKey(Director, on_delete=models.CASCADE)
+    director = models.ForeignKey(Director, on_delete=models.CASCADE, related_name='movies')
 
     def __str__(self):
         return self.title
+    def rating(self):
+        list_ = [review.stars for review in self.reviews.all()]
+        return sum(list_) / len(list_)
 
-
+STARS = (
+    (1, '*'),
+    (2, '* *'),
+    (3, '* * *'),
+    (4, '* * * *'),
+    (5, '* * * * *')
+)
 class Review(models.Model):
     text = models.TextField()
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-
+    stars = models.IntegerField(default=0, choices=STARS)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='reviews')
+    # stars = models.IntegerField(default=0)
     def __str__(self):
         return self.text
+
+    def stars_str(self):
+        return self.stars * '* '
+
