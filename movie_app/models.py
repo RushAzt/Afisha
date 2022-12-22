@@ -21,7 +21,7 @@ class Movie(models.Model):
         return self.title
     def rating(self):
         list_ = [review.stars for review in self.reviews.all()]
-        return sum(list_) / len(list_)
+        return sum(list_) / len(list_) if len(list_) != 0 else "No reviews"
 
 STARS = (
     (1, '*'),
@@ -34,7 +34,6 @@ class Review(models.Model):
     text = models.TextField()
     stars = models.IntegerField(default=0, choices=STARS)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='reviews')
-    # stars = models.IntegerField(default=0)
     def __str__(self):
         return self.text
 
