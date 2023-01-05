@@ -27,6 +27,7 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = 'id text stars stars_str movie'.split()
+
 class MoviesReviewsSerializer(serializers.ModelSerializer):
     reviews = ReviewSerializer(many=True)
     rating = serializers.SerializerMethodField()
